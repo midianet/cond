@@ -1,11 +1,10 @@
 package midianet.cond.service;
 
 import javaslang.control.Try;
-import midianet.cond.domain.User;
+import midianet.cond.domain.Tower;
 import midianet.cond.exception.InfraException;
 import midianet.cond.exception.NotFoundException;
-import midianet.cond.exception.UsernameUsedException;
-import midianet.cond.repository.UserRepository;
+import midianet.cond.repository.TowerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,13 +16,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService {
+public class TowerService {
 
     @Autowired
-    private UserRepository repository;
+    private TowerRepository repository;
 
     @Transactional
-    public Page<User> listAll(final Long id, final String name, final String username, final PageRequest page) {
+    public Page<Tower> listAll(final Long id, final String name, final PageRequest page) {
 //        javaslang.collection.List<Specification<User>> specs = javaslang.collection.List.empty();
 //        specs = id != null && id > 0 ? specs.append(id(id)) : specs;
 //        specs = Strings.isNullOrEmpty(name) ? specs : specs.append(nameStart(name));
@@ -36,33 +35,31 @@ public class UserService {
         return null;
     }
 
-    public List<User> listAll() {
+    public List<Tower> listAll() {
         return Try.of(() -> repository.findAll(new Sort(Sort.Direction.ASC, "name")))
                 .onFailure(InfraException::raise)
                 .get();
     }
 
-    public Optional<User> findById(final Long id) {
+    public Optional<Tower> findById(final Long id) {
         return Try.of(() -> repository.findById(id))
                 .onFailure(InfraException::raise)
-                .getOrElseThrow(() -> new NotFoundException("Usuário", id));
+                .getOrElseThrow(() -> new NotFoundException("Torre", id));
     }
 
     @Transactional
-    public User update(final User user) {
-        final User old = findById(user.getId())
-                .orElseThrow(() -> new NotFoundException("Usuário", user.getId()));
-        old.setName(user.getName());
-        old.setPassword(user.getPassword());
+    public Tower update(final Tower tower) {
+        final Tower old = findById(tower.getId())
+                .orElseThrow(() -> new NotFoundException("Torre", tower.getId()));
+        old.setName(tower.getName());
         return Try.of(() -> repository.save(old))
                 .onFailure(InfraException::raise)
                 .get();
     }
 
     @Transactional
-    public User create(final User user) {
-        if (!repository.findByUsername(user.getUsername()).isEmpty()) throw new UsernameUsedException(user.getName());
-        return Try.of(() -> repository.save(user))
+    public Tower create(final Tower tower) {
+        return Try.of(() -> repository.save(tower))
                 .onFailure(InfraException::raise)
                 .get();
     }
