@@ -3,9 +3,9 @@
 angular.module('Authentication', []);
 angular.module('Home', []);
 angular.module('BasicHttpAuthExample', ['Authentication',
-                                        'Home',
-                                        'ngRoute',
-                                        'ngCookies'])
+    'Home',
+    'ngRoute',
+    'ngCookies'])
 
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider
@@ -18,7 +18,7 @@ angular.module('BasicHttpAuthExample', ['Authentication',
                 controller: 'HomeController',
                 templateUrl: 'modules/app/home/home.html'
             })
-            .otherwise({ redirectTo: '/login' });
+            .otherwise({redirectTo: '/login'});
     }])
 
     .run(['$rootScope', '$location', '$cookieStore', '$http',
