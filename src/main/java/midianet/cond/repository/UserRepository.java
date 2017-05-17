@@ -8,9 +8,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor {
-
-    Optional<User> findById(final Long id);
-
-    List<User> findByUsername(final String username);
-
+    Optional<User> findUserByUsername(final String username);
 }

@@ -6,24 +6,36 @@ angular.module('Authentication')
             function (Base64, $http, $cookieStore, $rootScope, $timeout) {
                 var service = {};
                 service.Login = function (username, password, callback) {
+                    /* Dummy authentication for testing, uses $timeout to simulate api call*/
+                    // $timeout(function(){
+                    //
+                    //     var response = { success: username === 'test' && password === 'test' };
+                    //     if(!response.success) {
+                    //         response.message = 'Usuário e ou senha inválido';
+                    //     }
+                    //     callback(response);
+                    // }, 1000);
 
-                    /* Dummy authentication for testing, uses $timeout to simulate api call
-                     ----------------------------------------------*/
-                    $timeout(function(){
-                        var response = { success: username === 'test' && password === 'test' };
-                        if(!response.success) {
-                            response.message = 'Usuário e ou senha inválido';
-                        }
+                    var formData = {
+                        "username" : username,
+                        "password" : password
+                    };
+                    var response = {};
+                    $http({
+                        method: 'POST',
+                        url: '/resource/user/authenticate',
+                        data: $.param(formData),
+                        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                    })
+                    .success(function (data) {
+                        response.success = true;
+                        response.user = data;
                         callback(response);
-                    }, 1000);
-
-                    /* Use this for real authentication
-                     ----------------------------------------------*/
-                    //$http.post('/api/authenticate', { username: username, password: password })
-                    //    .success(function (response) {
-                    //        callback(response);
-                    //    });
-
+                    })
+                    .error(function (err) {
+                        response.message = 'Usuário e ou senha inválido';
+                        callback(response);
+                    });
                 };
 
                 service.SetCredentials = function (username, password) {

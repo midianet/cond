@@ -1,9 +1,9 @@
 package midianet.cond.resource;
 
-import midianet.cond.domain.Tower;
+import midianet.cond.domain.Ground;
 import midianet.cond.exception.NotFoundException;
-import midianet.cond.service.TowerService;
-import midianet.cond.vo.TowerVO;
+import midianet.cond.service.GroundService;
+import midianet.cond.vo.GroundVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -17,46 +17,48 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/resource/tower")
-public class TowerResource {
+@RequestMapping("/resource/ground")
+public class GroundResource {
 
     @Autowired
-    private TowerService service;
+    private GroundService service;
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<TowerVO>> list() {
-        final List<TowerVO> list = service.listAll()
-                .stream().map(u -> TowerVO.builder()
+    public ResponseEntity<List<GroundVO>> list() {
+        final List<GroundVO> list = service.listAll()
+                .stream().map(u -> GroundVO.builder()
                         .id(u.getId())
                         .name(u.getName())
                         .build())
                 .collect(Collectors.toList());
-        if (list.isEmpty()) throw new NotFoundException("Torre", "");
         return new ResponseEntity(list, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<TowerVO> findById(@PathVariable("id") final Long id) {
+    public ResponseEntity<GroundVO> findById(@PathVariable("id") final Long id) {
         return service.findById(id)
-                .map(u -> new ResponseEntity(u, HttpStatus.OK))
-                .orElseThrow(() -> new NotFoundException("Torre", id));
+                .map(g -> new ResponseEntity(GroundVO.builder()
+                        .id(g.getId())
+                        .name(g.getName())
+                        .build(), HttpStatus.OK))
+                .get();
     }
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> create(@Valid @RequestBody final TowerVO tower, final UriComponentsBuilder ucBuilder) {
-        final Tower u = service.save(Tower.builder()
-                .name(tower.getName())
+    public ResponseEntity<Void> create(@Valid @RequestBody final GroundVO ground, final UriComponentsBuilder ucBuilder) {
+        final Ground u = service.save(Ground.builder()
+                .name(ground.getName())
                 .build());
         final HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(ucBuilder.path("/resource/tower/{id}").buildAndExpand(u.getId()).toUri());
+        headers.setLocation(ucBuilder.path("/resource/ground/{id}").buildAndExpand(u.getId()).toUri());
         return new ResponseEntity(headers, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Void> update(@PathVariable("id") long id, @Valid @RequestBody final TowerVO tower) {
-        service.save(Tower.builder()
+    public ResponseEntity<Void> update(@PathVariable("id") long id, @Valid @RequestBody final GroundVO ground) {
+        service.save(Ground.builder()
                 .id(id)
-                .name(tower.getName())
+                .name(ground.getName())
                 .build());
         return new ResponseEntity(HttpStatus.OK);
     }

@@ -2,6 +2,7 @@ package midianet.cond.service;
 
 import javaslang.control.Try;
 import midianet.cond.domain.User;
+import midianet.cond.exception.BadCredentialsException;
 import midianet.cond.exception.InfraException;
 import midianet.cond.exception.NotFoundException;
 import midianet.cond.exception.UsernameUsedException;
@@ -43,13 +44,33 @@ public class UserService {
     }
 
     public Optional<User> findById(final Long id) {
-        return Try.of(() -> repository.findById(id))
+        return Try.of(() -> repository.findOne(id))
+                .map(u -> Optional.ofNullable(u))
                 .onFailure(InfraException::raise)
                 .getOrElseThrow(() -> new NotFoundException("Usuário", id));
     }
 
+    public Optional<User> login(final String username, final String password){
+        final Optional<User> user = Try.of(() -> repository.findUserByUsername(username))
+                .onFailure(InfraException::raise)
+                .get();
+        if(!user.isPresent() || !user.get().getPassword().equals(password)){
+            throw new BadCredentialsException();
+        }
+        return user;
+    }
+
     @Transactional
-    public User update(final User user) {
+    public User save(final User user) {
+        if (user.getId() == null) {
+            return create(user);
+        } else {
+            return update(user);
+        }
+    }
+
+
+    private User update(final User user) {
         final User old = findById(user.getId())
                 .orElseThrow(() -> new NotFoundException("Usuário", user.getId()));
         old.setName(user.getName());
@@ -59,9 +80,8 @@ public class UserService {
                 .get();
     }
 
-    @Transactional
-    public User create(final User user) {
-        if (!repository.findByUsername(user.getUsername()).isEmpty()) throw new UsernameUsedException(user.getName());
+    private User create(final User user) {
+        if (!repository.findUserByUsername(user.getUsername()).isPresent()) throw new UsernameUsedException(user.getName());
         return Try.of(() -> repository.save(user))
                 .onFailure(InfraException::raise)
                 .get();
@@ -69,7 +89,9 @@ public class UserService {
 
     @Transactional
     public void delete(final Long id) {
-        Try.run(() -> findById(id).ifPresent(a -> repository.delete(a)))
+        final User old = findById(id)
+                .orElseThrow(() -> new NotFoundException("Usuário", id));
+        Try.run(() -> repository.delete(old))
                 .onFailure(InfraException::raise);
     }
 

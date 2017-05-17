@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/resource/user")
-public class UserResource {
+@RequestMapping("/resource/resident")
+public class ResidentResource {
 
     @Autowired
     private UserService service;
@@ -39,12 +39,8 @@ public class UserResource {
 
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserVO> authenticate(@RequestParam("username") final String username, @RequestParam("password") final String password) {
-        final User u = service.login(username, password).get();
-        return new ResponseEntity(UserVO.builder()
-                                        .id(u.getId())
-                                        .name(u.getName())
-                                        .username(username)
-                                        .build(), HttpStatus.OK);
+        System.out.println(username);
+        return new ResponseEntity(UserVO.builder().username(username).password(password).build(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

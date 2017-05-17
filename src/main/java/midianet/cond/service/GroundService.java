@@ -1,10 +1,10 @@
 package midianet.cond.service;
 
 import javaslang.control.Try;
-import midianet.cond.domain.Tower;
+import midianet.cond.domain.Ground;
 import midianet.cond.exception.InfraException;
 import midianet.cond.exception.NotFoundException;
-import midianet.cond.repository.TowerRepository;
+import midianet.cond.repository.GroundRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,49 +16,49 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class TowerService {
+public class GroundService {
 
     @Autowired
-    private TowerRepository repository;
+    private GroundRepository repository;
 
     @Transactional
-    public Page<Tower> listAll(final Long id, final String name, final PageRequest page) {
-//        javaslang.collection.List<Specification<User>> specs = javaslang.collection.List.empty();
+    public Page<Ground> listAll(final Long id, final String name, final String groundname, final PageRequest page) {
+//        javaslang.collection.List<Specification<Ground>> specs = javaslang.collection.List.empty();
 //        specs = id != null && id > 0 ? specs.append(id(id)) : specs;
 //        specs = Strings.isNullOrEmpty(name) ? specs : specs.append(nameStart(name));
-//        specs = Strings.isNullOrEmpty(username) ? specs : specs.append(usernameStart(username));
+//        specs = Strings.isNullOrEmpty(groundname) ? specs : specs.append(groundnameStart(groundname));
 //        final boolean noSpec = specs.isEmpty();
-//        final Specification<User> spec = noSpec ? null : specs.reduce((a1, a2) -> where(a1).and(a2));
+//        final Specification<Ground> spec = noSpec ? null : specs.reduce((a1, a2) -> where(a1).and(a2));
 //        return Try.of(() -> noSpec ? repository.findAll(page) : repository.findAll(spec, page))
 //                .onFailure(e -> new InfraException(e))
 //                .get();
         return null;
     }
 
-    public List<Tower> listAll() {
+    public List<Ground> listAll() {
         return Try.of(() -> repository.findAll(new Sort(Sort.Direction.ASC, "name")))
                 .onFailure(InfraException::raise)
                 .get();
     }
 
-    public Optional<Tower> findById(final Long id) {
+    public Optional<Ground> findById(final Long id) {
         return Try.of(() -> repository.findOne(id))
-                .map(t -> Optional.ofNullable(t))
+                .map(g -> Optional.ofNullable(g))
                 .onFailure(InfraException::raise)
-                .getOrElseThrow(() -> new NotFoundException("Torre", id));
+                .getOrElseThrow(() -> new NotFoundException("Ambiente", id));
     }
 
     @Transactional
-    public Tower save(final Tower tower) {
-        return Try.of(() -> repository.save(tower))
+    public Ground save(final Ground ground) {
+        return Try.of(() -> repository.save(ground))
                 .onFailure(InfraException::raise)
                 .get();
     }
 
     @Transactional
     public void delete(final Long id) {
-        final Tower old = findById(id)
-                .orElseThrow(() -> new NotFoundException("Torre", id));
+        final Ground old = findById(id)
+                .orElseThrow(() -> new NotFoundException("Ambiente", id));
         Try.run(() -> repository.delete(old))
                 .onFailure(InfraException::raise);
     }
