@@ -1,0 +1,13 @@
+{
+  "name": "go-data-table",
+  "authors": [
+    "eder-bd <eder-bd@segplan.go.gov.br>"
+  ],
+  "description": "Manipula DataTables.js para lista paginada Padão",
+  "main": "goDataTable.js",
+  "keywords": [
+    "DataTable"
+  ],
+  "license": "MIT",
+  "homepage": "http://git.intra.goias.gov.br/goias/go-data-table.git"
+}

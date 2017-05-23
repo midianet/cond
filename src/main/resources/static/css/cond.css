@@ -1,0 +1,119 @@
+.vertical-center {
+    min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+    min-height: 100vh; /* These two lines are counted as one :-)       */
+
+    display: flex;
+    align-items: center;
+}
+.jumbotron {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 1px dashed deeppink;
+}
+
+/* datatables */
+
+.dataTables_filter input[type=search], .dataTable input[type=text],
+.dataTables_length select {
+    padding: 5px 12px;
+    padding-left: 25px;
+    transition: border 0.2s linear 0s, box-shadow 0.2s linear 0s;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+    color: #555;
+    font-size: 13px;
+}
+.dataTables_length select {
+    background: none;
+    padding-left: 10px;
+}
+.dataTable input[type=text] {
+    width: 100%;
+}
+.dataTables_wrapper .dataTables_filter {
+    text-align: right;
+    margin-top: -35px;
+}
+.dataTables_wrapper {
+    clear: both;
+    zoom: 1;
+}
+.dataTables_wrapper .dataTables_paginate {
+    text-align: right;
+    margin-top: -18px;
+    margin-bottom: 20px;
+}
+.dataTable_wrapper .tr-filtros , .dataTable_wrapper .tr-cabecalho {
+    background: #F5F5F5;
+}
+
+.dataTables_info , .dataTables_paginate{
+    font-weight: 100; font-size: 12px;
+}
+
+a.paginate_button {
+    padding: 0 10px;
+    border-radius: 3px;
+    margin: 0 2px;
+    background-color: transparent;
+    color: #666;
+    line-height: 1.42857;
+    text-decoration: none;
+    cursor: hand;
+}
+a.paginate_button:hover {
+    background-color: #eee;
+    cursor: pointer;
+    cursor: hand;
+}
+.form-control[type=search], .form-control.search {
+    background-position: 97%;
+    padding-left: 12px;
+}
+button.DTTT_button, div.DTTT_button, a.DTTT_button {
+    background: #618fb0;
+    border-color: #5383a5;
+    color: #fff;
+    box-shadow: none;
+}
+button.DTTT_disabled, div.DTTT_disabled, a.DTTT_disabled {
+    background: #92B0C5;
+    border-color: #89A8BE;
+    box-shadow: none;
+}
+button.DTTT_button:focus, div.DTTT_button:focus, a.DTTT_button:focus {
+    background: #618fb0;
+    box-shadow: none;
+}
+button.DTTT_button:hover, div.DTTT_button:hover, a.DTTT_button:hover {
+    background: #4A7594;
+    box-shadow: none;
+}
+button.DTTT_button, div.DTTT_button, a.DTTT_button {
+    margin-left: 5px;
+    padding-top: 4px;
+    margin-right: 0;
+}
+table.dataTable tr.DTTT_selected.even {
+    background-color: #f6f6f6;
+}
+table.dataTable tr.DTTT_selected.even td.sorting_1 {
+    background-color: #f6f6f6;
+}
+table.dataTable tr.DTTT_selected.odd {
+    background-color: #f1f1f1;
+}
+table.dataTable tr.DTTT_selected.odd td.sorting_1 {
+    background-color: #f1f1f1;
+}
+#btnRemoverItensSelecionados{
+    margin-left: 4px;
+    padding: 5px 12px 4px 12px;
+}
+#btnEditarItemSelecionado{
+    margin-left: 4px;
+    padding: 5px 12px 4px 12px;
+}
+/* fim datatables */

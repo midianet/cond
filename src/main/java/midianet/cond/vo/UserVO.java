@@ -32,4 +32,9 @@ public class UserVO implements Serializable {
     @NotEmpty
     @Size(min = 8, max = 15)
     private String password;
+
+    @NotNull
+    @NotEmpty
+    @Size(max = 10)
+    private String profile;
 }

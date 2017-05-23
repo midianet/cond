@@ -9,11 +9,9 @@ import midianet.cond.repository.ResidentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,7 +21,7 @@ public class ResidentService {
     private ResidentRepository repository;
 
     @Transactional
-    public Page<Resident> listAll(final Long id, final String name, final String residentname, final PageRequest page) {
+    public Page<Resident> paginate(final Long idTower, final String apto, final String name, final PageRequest page) {
 //        javaslang.collection.List<Specification<Resident>> specs = javaslang.collection.List.empty();
 //        specs = id != null && id > 0 ? specs.append(id(id)) : specs;
 //        specs = Strings.isNullOrEmpty(name) ? specs : specs.append(nameStart(name));
@@ -34,12 +32,6 @@ public class ResidentService {
 //                .onFailure(e -> new InfraException(e))
 //                .get();
         return null;
-    }
-
-    public List<Resident> listAll() {
-        return Try.of(() -> repository.findAll(new Sort(Sort.Direction.ASC, "name")))
-                .onFailure(InfraException::raise)
-                .get();
     }
 
     public Optional<Resident> findById(final Long id) {
@@ -85,6 +77,12 @@ public class ResidentService {
                 .orElseThrow(() -> new NotFoundException("Morador", id));
         Try.run(() -> repository.delete(old))
                 .onFailure(InfraException::raise);
+    }
+
+    public long count(){
+        return Try.of(() -> repository.count())
+                  .onFailure(InfraException::raise)
+                   .get();
     }
 
 }

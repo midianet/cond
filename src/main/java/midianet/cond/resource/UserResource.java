@@ -31,6 +31,7 @@ public class UserResource {
                         .name(u.getName())
                         .username(u.getUsername())
                         .password(u.getPassword())
+                        .profile(u.getProfile())
                         .build())
                 .collect(Collectors.toList());
         if (list.isEmpty()) throw new NotFoundException("Usuário", "");
@@ -44,6 +45,7 @@ public class UserResource {
                                         .id(u.getId())
                                         .name(u.getName())
                                         .username(username)
+                                        .profile(u.getProfile())
                                         .build(), HttpStatus.OK);
     }
 
@@ -60,6 +62,7 @@ public class UserResource {
                 .name(user.getName())
                 .username(user.getUsername())
                 .password(user.getPassword())
+                .profile(user.getProfile())
                 .build());
         final HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ucBuilder.path("/resource/user/{id}").buildAndExpand(u.getId()).toUri());
@@ -73,6 +76,7 @@ public class UserResource {
                 .name(user.getName())
                 .username(user.getUsername())
                 .password(user.getPassword())
+                .profile(user.getProfile())
                 .build());
         return new ResponseEntity(HttpStatus.OK);
     }

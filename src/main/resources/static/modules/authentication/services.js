@@ -6,15 +6,6 @@ angular.module('Authentication')
             function (Base64, $http, $cookieStore, $rootScope, $timeout) {
                 var service = {};
                 service.Login = function (username, password, callback) {
-                    /* Dummy authentication for testing, uses $timeout to simulate api call*/
-                    // $timeout(function(){
-                    //
-                    //     var response = { success: username === 'test' && password === 'test' };
-                    //     if(!response.success) {
-                    //         response.message = 'Usuário e ou senha inválido';
-                    //     }
-                    //     callback(response);
-                    // }, 1000);
 
                     var formData = {
                         "username" : username,
@@ -29,7 +20,7 @@ angular.module('Authentication')
                     })
                     .success(function (data) {
                         response.success = true;
-                        response.user = data;
+                        response.user    = data;
                         callback(response);
                     })
                     .error(function (err) {
@@ -38,14 +29,15 @@ angular.module('Authentication')
                     });
                 };
 
-                service.SetCredentials = function (username, password) {
-                    var authdata = Base64.encode(username + ':' + password);
+                service.SetCredentials = function (user) {
+                    var authdata = Base64.encode(user.username + ':' + user.password);
 
                     $rootScope.globals = {
-                        currentUser: {
-                            username: username,
-                            authdata: authdata
-                        }
+                               currentUser: {
+                               username: user.username,
+                               profile:  user.profile,
+                               authdata: authdata
+                             }
                     };
 
                     $http.defaults.headers.common['Authorization'] = 'Basic ' + authdata; // jshint ignore:line

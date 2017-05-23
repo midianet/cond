@@ -81,7 +81,7 @@ public class UserService {
     }
 
     private User create(final User user) {
-        if (!repository.findUserByUsername(user.getUsername()).isPresent()) throw new UsernameUsedException(user.getName());
+        if (repository.findUserByUsername(user.getUsername()).isPresent()) throw new UsernameUsedException(user.getName());
         return Try.of(() -> repository.save(user))
                 .onFailure(InfraException::raise)
                 .get();

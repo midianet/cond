@@ -1,27 +1,74 @@
 <!DOCTYPE html>
-<html ng-app="BasicHttpAuthExample" lang="en">
-<head>
-    <meta charset="utf-8"/>
-    <title>Cond - Bella Vita</title>
-    <link rel="stylesheet" href="./bower_components/bootstrap/dist/css/bootstrap.min.css"/>
-</head>
-<body>
-<div class="jumbotron">
-    <div class="container">
-        akiii
-        <div class="col-xs-offset-2 col-xs-8">
-            <div ng-view></div>
-            dentro
+<html ng-app="App" lang="en">
+    <head>
+        <title>Cond - Bella Vita</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./bower_components/datatables.net-responsive-dt/css/responsive.dataTables.css"/>
+        <!--<link rel="stylesheet" href="./bower_components/datatables.net-dt/css/jquery.dataTables.min.css"/>-->
+        <!--<link rel="stylesheet" href="./bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css"/>-->
+        <link rel="stylesheet" href="./bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="./css/cond.css"/>
+        <script src="./bower_components/jquery/dist/jquery.min.js"></script>
+        <script src="./bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+        <!--<script src="./bower_components/datatables.net/js/jquery.dataTables.min.js"></script>-->
+        <!--<script src="./bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>-->
+
+        <script src="./bower_components/angular/angular.js"></script>
+        <script src="./bower_components/angular-route/angular-route.js"></script>
+        <script src="./bower_components/angular-cookies/angular-cookies.js"></script>
+        <script src="./bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+        <script src="./bower_components/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+        <script src="./bower_components/go-data-table/goDataTable.js"></script>
+        <script src="./scripts/app.js"></script>
+        <script src="./modules/authentication/services.js"></script>
+        <script src="./modules/authentication/loginController.js"></script>
+        <script src="./modules/app/home/homeController.js"></script>
+        <script src="./modules/app/resident/residentController.js"></script>
+
+
+        <style>
+            .navbar {
+                margin-bottom: 0;
+                border-radius: 0;
+            }
+            .row.content {height: 450px}
+            @media screen and (max-width: 767px) {
+                .row.content {height:auto;}
+            }
+        </style>
+    </head>
+    <body>
+        <div ng-controller="menuController">
+            <div ng-if="userLogged()">
+                <nav class="navbar navbar-inverse">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="#/">Condomínio Bella Vita</a>
+                    </div>
+                    <div class="collapse navbar-collapse" id="myNavbar">
+                        <ul class="nav navbar-nav" ng-if="userLogged().profile == 'USER'" >
+                            <li><a href="#/public">Morador</a></li>
+                        </ul>
+                        <ul class="nav navbar-nav" ng-if="userLogged().profile == 'ADMIN'">
+                            <li><a href="#/public">Morador</a></li>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right">
+                            <li><a href="#/login" ng-click="logout()"><span class="glyphicon glyphicon-log-in"></span> Sair</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            </div>
         </div>
-    </div>
-</div>
-<script src="./bower_components/jquery/dist/jquery.min.js"></script>
-<script src="./bower_components/angular/angular.js"></script>
-<script src="./bower_components/angular-route/angular-route.js"></script>
-<script src="./bower_components/angular-cookies/angular-cookies.js"></script>
-<script src="./scripts/app.js"></script>
-<script src="./modules/authentication/services.js"></script>
-<script src="modules/authentication/loginController.js"></script>
-<script src="modules/app/home/homeController.js"></script>
-</body>
+        </div>
+        <div class="container-fluid">
+            <div ng-view></div>
+        </div>
+    </body>
 </html>

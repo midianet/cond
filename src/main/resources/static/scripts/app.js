@@ -2,22 +2,25 @@
 
 angular.module('Authentication', []);
 angular.module('Home', []);
-angular.module('BasicHttpAuthExample', ['Authentication', 'Home', 'ngRoute', 'ngCookies'])
+angular.module('Resident', []);
+angular.module('App', ['Authentication', 'Home', 'Resident','ngRoute', 'ngCookies'])
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider
             .when('/login', {
                 controller: 'LoginController',
-                templateUrl: 'modules/authentication/login.html',
-                hideMenus: true
+                templateUrl: 'modules/authentication/login.html'
             })
             .when('/', {
                 controller: 'HomeController',
                 templateUrl: 'modules/app/home/home.html'
             })
+            .when('/public', {
+                controller: 'ResidentController',
+                templateUrl: 'modules/app/resident/public.html'
+            })
             .otherwise({redirectTo: '/login'});
     }])
-
-    .run(['$rootScope', '$location', '$cookieStore', '$http', function ($rootScope, $location, $cookieStore, $http) {
+    .run(['$rootScope', '$location', '$cookieStore', '$http' , function ($rootScope, $location, $cookieStore, $http) {
         // keep user logged in after page refresh
         $rootScope.globals = $cookieStore.get('globals') || {};
         if ($rootScope.globals.currentUser) {
@@ -29,4 +32,14 @@ angular.module('BasicHttpAuthExample', ['Authentication', 'Home', 'ngRoute', 'ng
                 $location.path('/login');
             }
         });
+    }])
+    .controller('menuController',['$scope', '$rootScope', 'AuthenticationService', function ($scope, $rootScope, AuthenticationService) {
+
+        $scope.userLogged = function () {
+            return $rootScope.globals.currentUser
+        }
+        $scope.logout = function(){
+            AuthenticationService.ClearCredentials();
+        }
+
     }]);

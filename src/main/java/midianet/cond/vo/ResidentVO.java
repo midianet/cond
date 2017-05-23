@@ -16,7 +16,7 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResidentVO implements Serializable {
+public class ResidentVO implements Serializable, Convertible {
 
     private Long id;
 
@@ -31,7 +31,9 @@ public class ResidentVO implements Serializable {
     private Integer apartment;
 
     @NotNull
-    private Tower tower;
+    private Long towerId;
+
+    private String towerName;
 
     @NotNull
     private Date begin;

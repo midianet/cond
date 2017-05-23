@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.*;
@@ -24,19 +25,28 @@ public class User {
     private Long id;
 
     @NotNull
+    @NotEmpty
     @Size(min = 5, max = 80)
     @Column(name = "user_name", length = 80, nullable = false)
     private String name;
 
     @NotNull
+    @NotEmpty
     @Size(min = 5, max = 10)
     @Column(name = "user_username", length = 10, nullable = false, unique = true)
     private String username;
 
     @NotNull
+    @NotEmpty
     @Size(min = 8, max = 15)
     @Column(name = "user_password", length = 15, nullable = false)
     private String password;
+
+    @NotNull
+    @NotEmpty
+    @Size(max = 10)
+    @Column(name = "user_profile", length = 10, nullable = false)
+    private String profile;
 
     public static Specification<User> id(final Long id) {
         return (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.<Long>get("id"), id);
