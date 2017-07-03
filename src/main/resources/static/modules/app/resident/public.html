@@ -1,0 +1,19 @@
+<div class="dataTable_wrapper">
+    <legend class="section" style="font-weight: 600;"> Lista de Moradores</legend>
+    <table go-data-table  ajax="http://localhost:8080/resource/resident/paginar" id="dt-resident" class="display table table-hover" cellspacing="0" width="100%">
+        <thead>
+            <tr class="tr-cabecalho">
+                <th go-data-table-item name="tore" style="width:200px;" >Torre</th>
+                <th go-data-table-item name="apto" style="width: 50px;" >Apto</th>
+                <th go-data-table-item name="nome">Nome</th>
+                <th style="width: 5%"></th>
+            </tr>
+            <tr class="tr-filtros">
+                <th><input style="width: 200px;" id="torre-search" type="text" placeholder=""/></th>
+                <th><input style="width: 50px;" id="apto-search" type="text" maxlength="4" placeholder=""/></th>
+                <th><input id="nome-search" style="width: 100%" type="text" maxlength="80" placeholder=""/></th>
+                <th></th>
+            </tr>
+        </thead>
+    </table>
+</div>
