@@ -3,6 +3,7 @@ package midianet.cond.resource;
 import midianet.cond.domain.Resident;
 import midianet.cond.exception.NotFoundException;
 import midianet.cond.service.ResidentService;
+import midianet.cond.vo.GroundVO;
 import midianet.cond.vo.ResidentVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -31,46 +32,72 @@ public class ResidentResource {
     private ResidentService service;
 
     @RequestMapping(value = "/paginar", method = RequestMethod.GET, produces = DataTableResponse.JSON)
-    public ResponseEntity<DataTableResponse> list(@RequestParam("draw")                      final Integer draw,
+    public ResponseEntity<DataTableResponse> list(@RequestParam("draw")                      final Long draw,
                                                   @RequestParam("start")                     final Integer start,
                                                   @RequestParam("length")                    final Integer length,
                                                   @RequestParam("search[value]")             final String  searchValue,
-                                                  @RequestParam("columns[0][search][value]") final String  torre,
-                                                  @RequestParam("columns[1][search][value]") final String  apto,
-                                                  @RequestParam("columns[2][search][value]") final String  nome,
+                                                  @RequestParam("columns[0][search][value]") final Long    torre,
+                                                  @RequestParam("columns[1][search][value]") final Integer apto,
+                                                  @RequestParam("columns[2][search][value]") final String  name,
                                                   @RequestParam("order[0][column]")          final Integer ordem,
                                                   @RequestParam("order[0][dir]")             final String  ordemDir) {
-
-        final DataTableResponse dtr = new DataTableResponse();
-        final List<Map<String, String>> res = new ArrayList();
-        dtr.setDraw(draw);
         final String[] columns = new String[]{"torre", "apto","nome"};
+        final List<String[]> data = new ArrayList();
+        final DataTableResponse dt = new DataTableResponse();
+        dt.setDraw(draw);
         try {
-            final Integer qtTotal = new Long(service.count()).intValue();
+            final Long qtTotal = service.count();
             final Map<String, String> searchParams = new HashMap();
             if (!searchValue.isEmpty()) {
                 searchParams.put(columns[1], searchValue);
             }
-            final Integer page = new Double(Math.ceil(start / length)).intValue();
-            final PageRequest pr = new PageRequest(page, length,
-                    new Sort(new Order(Direction.fromString(ordemDir), columns[ordem])));
-
-            final Page<ResidentVO> list = service.paginate(Long.parseLong(torre), apto, nome, pr).map(r -> ResidentVO.builder().id(r.getId()).apartment(r.getApartment()).name(r.getName()).build()) ;
-
-            final Integer qtFilter = new Long(list.getTotalElements()).intValue();
+            final Integer page   = new Double(Math.ceil(start / length)).intValue();
+            final PageRequest pr = new PageRequest(page,length, new Sort(new Sort.Order(Sort.Direction.fromString(ordemDir),columns[ordem])));
+            final Page<ResidentVO> list = service.paginate(torre,apto,name, pr).map(g -> ResidentVO.builder().id(g.getId()).name(g.getName()).build());
+            final Long qtFilter  = list.getTotalElements();
             if (qtFilter > 0) {
-                list.forEach(r -> res.add(r.asMapofValues((Object v) -> String.format("row_%s", v),
-                                                                        "DT_RowId",
-                                                                        "id",
-                                                                        columns
-                )));
+                list.forEach(r -> data.add(r.toArray()));
             }
-            dtr.setRecordsFiltered(qtFilter);
-            dtr.setData(res);
-            dtr.setRecordsTotal(qtTotal);
+            dt.setRecordsFiltered(qtFilter);
+            dt.setData(data);
+            dt.setRecordsTotal(qtTotal);
         } catch (Exception e) {
-            //dtr.setError(GoiasResourceMessage.getMessage("msg_erro_dessconhecido:"+ e.getMessage()));
+            System.out.println(e);
+            dt.setError("Datatable error "+ e.getMessage());
         }
+        return new ResponseEntity(dt, HttpStatus.OK);
+
+
+        final DataTableResponse dtr = new DataTableResponse();
+//        final List<Map<String, String>> res = new ArrayList();
+//        dtr.setDraw(draw);
+//        final String[] columns = new String[]{"torre", "apto","nome"};
+//        try {
+//            final Integer qtTotal = new Long(service.count()).intValue();
+//            final Map<String, String> searchParams = new HashMap();
+//            if (!searchValue.isEmpty()) {
+//                searchParams.put(columns[1], searchValue);
+//            }
+//            final Integer page = new Double(Math.ceil(start / length)).intValue();
+//            final PageRequest pr = new PageRequest(page, length,
+//                    new Sort(new Order(Direction.fromString(ordemDir), columns[ordem])));
+//
+//            final Page<ResidentVO> list = service.paginate(Long.parseLong(torre), apto, nome, pr).map(r -> ResidentVO.builder().id(r.getId()).apartment(r.getApartment()).name(r.getName()).build()) ;
+//
+//            final Long qtFilter = list.getTotalElements();
+//            if (qtFilter > 0) {
+//                list.forEach(r -> res.add(r.asMapofValues((Object v) -> String.format("row_%s", v),
+//                                                                        "DT_RowId",
+//                                                                        "id",
+//                                                                        columns
+//                )));
+//            }
+//            dtr.setRecordsFiltered(qtFilter);
+//            dtr.setData(res);
+//            dtr.setRecordsTotal(qtTotal);
+//        } catch (Exception e) {
+//            //dtr.setError(GoiasResourceMessage.getMessage("msg_erro_dessconhecido:"+ e.getMessage()));
+//        }
         return new ResponseEntity(dtr, HttpStatus.OK);
     }
 

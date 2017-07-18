@@ -14,7 +14,7 @@ import java.io.Serializable;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class GroundVO implements Serializable {
+public class GroundVO implements Serializable{
 
     private Long id;
 
@@ -22,5 +22,10 @@ public class GroundVO implements Serializable {
     @NotEmpty
     @Size(min = 5, max = 80)
     private String name;
+
+    public String[] toArray(){
+        String[] a =  {String.valueOf(id),name};
+        return a;
+    }
 
 }

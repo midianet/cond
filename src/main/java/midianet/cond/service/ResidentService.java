@@ -21,7 +21,7 @@ public class ResidentService {
     private ResidentRepository repository;
 
     @Transactional
-    public Page<Resident> paginate(final Long idTower, final String apto, final String name, final PageRequest page) {
+    public Page<Resident> paginate(final Long tower, final Integer apto, final String name, final PageRequest page) {
 //        javaslang.collection.List<Specification<Resident>> specs = javaslang.collection.List.empty();
 //        specs = id != null && id > 0 ? specs.append(id(id)) : specs;
 //        specs = Strings.isNullOrEmpty(name) ? specs : specs.append(nameStart(name));

@@ -3,6 +3,7 @@
 angular.module('Authentication', []);
 angular.module('Home', []);
 angular.module('Resident', []);
+angular.module('Tabela',['datatables', 'datatables.light-columnfilter'])
 angular.module('App', ['Authentication', 'Home', 'Resident','ngRoute', 'ngCookies'])
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider
@@ -15,7 +16,7 @@ angular.module('App', ['Authentication', 'Home', 'Resident','ngRoute', 'ngCookie
                 templateUrl: 'modules/app/home/home.html'
             })
             .when('/public', {
-                controller: 'ResidentController',
+                controller: 'TabelaController',
                 templateUrl: 'modules/app/resident/public.html'
             })
             .otherwise({redirectTo: '/login'});

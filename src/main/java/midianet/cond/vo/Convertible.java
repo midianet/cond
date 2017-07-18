@@ -1,6 +1,5 @@
 package midianet.cond.vo;
 
-import org.apache.log4j.Logger;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.ZoneId;

@@ -1,5 +1,6 @@
 package midianet.cond.service;
 
+import com.google.common.base.Strings;
 import javaslang.control.Try;
 import midianet.cond.domain.Ground;
 import midianet.cond.exception.InfraException;
@@ -9,8 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import static midianet.cond.domain.Ground.id;
+import static midianet.cond.domain.Ground.nameStart;
+import static org.springframework.data.jpa.domain.Specifications.where;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,17 +27,15 @@ public class GroundService {
     private GroundRepository repository;
 
     @Transactional
-    public Page<Ground> listAll(final Long id, final String name, final String groundname, final PageRequest page) {
-//        javaslang.collection.List<Specification<Ground>> specs = javaslang.collection.List.empty();
-//        specs = id != null && id > 0 ? specs.append(id(id)) : specs;
-//        specs = Strings.isNullOrEmpty(name) ? specs : specs.append(nameStart(name));
-//        specs = Strings.isNullOrEmpty(groundname) ? specs : specs.append(groundnameStart(groundname));
-//        final boolean noSpec = specs.isEmpty();
-//        final Specification<Ground> spec = noSpec ? null : specs.reduce((a1, a2) -> where(a1).and(a2));
-//        return Try.of(() -> noSpec ? repository.findAll(page) : repository.findAll(spec, page))
-//                .onFailure(e -> new InfraException(e))
-//                .get();
-        return null;
+    public Page<Ground> paginate(final String id, final String name, final PageRequest page) {
+        javaslang.collection.List<Specification<Ground>> specs = javaslang.collection.List.empty();
+        specs = Strings.isNullOrEmpty(id)   ? specs : specs.append(id(Long.parseLong(id)));
+        specs = Strings.isNullOrEmpty(name) ? specs : specs.append(nameStart(name));
+        final boolean noSpec = specs.isEmpty();
+        final Specification<Ground> spec = noSpec ? null : specs.reduce((a1, a2) -> where(a1).and(a2));
+        return Try.of(() -> noSpec ? repository.findAll(page) : repository.findAll(spec, page))
+                .onFailure(e -> new InfraException(e))
+                .get();
     }
 
     public List<Ground> listAll() {
@@ -61,6 +64,12 @@ public class GroundService {
                 .orElseThrow(() -> new NotFoundException("Ambiente", id));
         Try.run(() -> repository.delete(old))
                 .onFailure(InfraException::raise);
+    }
+
+    public Long count(){
+        return Try.of(() -> new Long(repository.count()))
+                .onFailure(InfraException::raise)
+                .get();
     }
 
 }
